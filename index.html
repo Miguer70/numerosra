@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Números Reales</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      color: #333;
+    }
+    .number {
+      font-size: 24px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .correct {
+      color: green;
+    }
+    .incorrect {
+      color: red;
+    }
+    .final-results {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Juego de Números Reales (0 a 1)</h1>
+    <p>¿El siguiente número es racional o irracional?</p>
+    <div class="number" id="numberDisplay">...</div>
+    <div class="options">
+      <button onclick="checkAnswer('racional')">Racional</button>
+      <button onclick="checkAnswer('irracional')">Irracional</button>
+    </div>
+    <div class="result" id="result"></div>
+    <button onclick="nextQuestion()" id="nextButton">Siguiente Pregunta</button>
+    <div class="final-results hidden" id="finalResults">
+      <h2>Resultados Finales</h2>
+      <p>Respuestas correctas: <span id="correctAnswers">0</span></p>
+      <p>Respuestas incorrectas: <span id="incorrectAnswers">0</span></p>
+      <button onclick="resetGame()">Reiniciar Juego</button>
+    </div>
+  </div>
+
+  <script>
+    // Lista de números entre 0 y 1 (racionales e irracionales)
+    const numbers = [
+      { value: "0.5", type: "racional" },
+      { value: "0.75", type: "racional" },
+      { value: "0.333...", type: "racional" },
+      { value: "0.125", type: "racional" },
+      { value: "√2/2", type: "irracional" },
+      { value: "π/4", type: "irracional" },
+      { value: "1/√2", type: "irracional" },
+      { value: "0.101101110...", type: "irracional" },
+    ];
+
+    let currentNumber;
+    let correctCount = 0;
+    let incorrectCount = 0;
+    let questionCount = 0;
+    const totalQuestions = 5; // Número total de preguntas
+
+    // Función para mostrar un número aleatorio
+    function displayRandomNumber() {
+      const randomIndex = Math.floor(Math.random() * numbers.length);
+      currentNumber = numbers[randomIndex];
+      document.getElementById("numberDisplay").textContent = currentNumber.value;
+      document.getElementById("result").textContent = "";
+    }
+
+    // Función para verificar la respuesta
+    function checkAnswer(userAnswer) {
+      const resultElement = document.getElementById("result");
+      if (userAnswer === currentNumber.type) {
+        resultElement.textContent = "¡Correcto!";
+        resultElement.className = "result correct";
+        correctCount++;
+      } else {
+        resultElement.textContent = "Incorrecto.";
+        resultElement.className = "result incorrect";
+        incorrectCount++;
+      }
+      questionCount++;
+      if (questionCount >= totalQuestions) {
+        endGame();
+      }
+    }
+
+    // Función para pasar a la siguiente pregunta
+    function nextQuestion() {
+      if (questionCount < totalQuestions) {
+        displayRandomNumber();
+      }
+    }
+
+    // Función para finalizar el juego y mostrar resultados
+    function endGame() {
+      document.getElementById("nextButton").classList.add("hidden");
+      document.getElementById("finalResults").classList.remove("hidden");
+      document.getElementById("correctAnswers").textContent = correctCount;
+      document.getElementById("incorrectAnswers").textContent = incorrectCount;
+    }
+
+    // Función para reiniciar el juego
+    function resetGame() {
+      correctCount = 0;
+      incorrectCount = 0;
+      questionCount = 0;
+      document.getElementById("finalResults").classList.add("hidden");
+      document.getElementById("nextButton").classList.remove("hidden");
+      displayRandomNumber();
+    }
+
+    // Iniciar el juego
+    displayRandomNumber();
+  </script>
+</body>
+</html>
